@@ -10,8 +10,10 @@ export enum Ability {
   // defending
   Confusion = 4000,
 
-  // attachking
+  // attacking pre
   Deathtouch = 6000,
-  Bloodlust,
+
+  // attacking post
+  Bloodlust = 7001,
 
 }

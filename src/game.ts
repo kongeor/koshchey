@@ -13,9 +13,6 @@ export class Game {
     private p1: Deck;
     private p2: Deck;
 
-    private p1Idx: CardIdx;
-    private p2Idx: CardIdx;
-
     private round: number;
 
     private state: State;
@@ -25,9 +22,6 @@ export class Game {
     constructor(p1: Deck, p2: Deck) {
         this.p1 = p1;
         this.p2 = p2;
-
-        this.p1Idx = 0;
-        this.p2Idx = 0;
 
         this.round = 0;
         this.state = "active";
@@ -77,7 +71,13 @@ export class Game {
     }
 
     private advanceIndexes(): void {
-
+        if (this.turn = 'p1') {
+            this.p1.advanceIndexes('attacker');
+            this.p2.advanceIndexes('defender');
+        } else {
+            this.p1.advanceIndexes('defender');
+            this.p2.advanceIndexes('attacker');
+        }
     }
 
     private switchTurn(): void {

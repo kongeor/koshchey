@@ -26,11 +26,21 @@ export class Deck {
         let currentIdx = this.activeCardIdx;
 
         if (turn === 'attacker') {
+            // for attackers we start from the next card
+            // so we need to check one card less
             cardCount--;
             currentIdx = this.nextIndex(this.activeCardIdx);
         }
 
-        // check dead
+        // TODO improve
+        // technically as soon as we visit the same card it
+        // means that we can stop looping
+        for (var i = 0; i < cardCount; i++) {
+            if (this.cardAt(currentIdx).isAlive()) {
+                break;
+            }
+            currentIdx = this.nextIndex(this.activeCardIdx);
+        }
     }
 
     public nextIndex(idx: number): number {
