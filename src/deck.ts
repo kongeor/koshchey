@@ -17,6 +17,10 @@ export class Deck {
         return _.every(this.cards, c => c.isDead());
     }
 
+    public getActiveCard(): GameCard {
+        return this.cardAt(this.activeCardIdx);
+    }
+
     public cardAt(idx: number): GameCard {
         return this.cards[idx];
     }

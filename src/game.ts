@@ -44,20 +44,20 @@ export class Game {
             this.playTurn();
             this.advanceIndexes();
             this.switchTurn();
+            this.round++;
         }
     }
 
     private playTurn(): number {
         switch (this.turn) {
-            case 'p1': return this.playDeckAgainst(this.p1, this.p1Idx, this.p2, this.p2Idx);
-            case 'p2': return this.playDeckAgainst(this.p2, this.p2Idx, this.p1, this.p1Idx);
+            case 'p1': return this.playDeckAgainst(this.p1, this.p2);
+            case 'p2': return this.playDeckAgainst(this.p2, this.p1);
         }
     }
 
-    private playDeckAgainst(attacker: Deck, attackerIdx: number, 
-        defender: Deck, defenderIdx: number): number {
-        let attackingCard = attacker.cardAt(attackerIdx);
-        let defendingCard = defender.cardAt(defenderIdx);
+    private playDeckAgainst(attacker: Deck, defender: Deck): number {
+        let attackingCard = attacker.getActiveCard();
+        let defendingCard = defender.getActiveCard();
 
         const damage = attackingCard.attackCard(defendingCard);
 
