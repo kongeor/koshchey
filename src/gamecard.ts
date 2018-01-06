@@ -6,11 +6,13 @@ export class GameCard implements Card {
   attack: number;
   life: number;
   luck: number;
-  abilities: [Ability];
+  abilities: Ability[];
 
   constructor(card: Card) {
     this.attack = card.attack;
     this.life = card.life;
+    this.luck = card.luck;
+    this.abilities = []; // TODO
   }
 
   isAlive(): boolean {

@@ -39,9 +39,16 @@ export class Game {
         }
     }
 
+    public play() {
+        while(this.state === 'active') {
+            this.playRound();
+        }
+    }
+
     public playRound() {
         if (this.state === 'active') {
             this.playTurn();
+            this.updateState();
             this.advanceIndexes();
             this.switchTurn();
             this.round++;
