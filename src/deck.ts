@@ -45,6 +45,8 @@ export class Deck {
             }
             currentIdx = this.nextIndex(this.activeCardIdx);
         }
+
+        this.activeCardIdx = currentIdx;
     }
 
     public nextIndex(idx: number): number {
