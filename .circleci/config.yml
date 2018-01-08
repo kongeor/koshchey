@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/kashengine
     docker:
-      - image: node:8.9.4
+      - image: circleci/node:8.9.3
     steps:
       - checkout
       - run:
@@ -20,7 +20,7 @@ jobs:
             - node_modules
   test:
     docker:
-      - image: node:8.9.4
+      - image: circleci/node:8.9.3
     steps:
       - checkout
       - run:
