@@ -66,6 +66,12 @@ export class Game {
         let attackingCard = attacker.getActiveCard();
         let defendingCard = defender.getActiveCard();
 
+        let passiveAbility = attackingCard.passiveAbility;
+        if (passiveAbility) {
+            passiveAbility.perform(attackingCard, defendingCard,
+                attacker, defender, this);
+        }
+
         const damage = attackingCard.attackCard(defendingCard);
 
         const counter = Math.random() > 0.5;

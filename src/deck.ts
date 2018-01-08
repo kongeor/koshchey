@@ -25,6 +25,14 @@ export class Deck {
         return this.cards[idx];
     }
 
+    public nextCard(): GameCard {
+        return this.cards[this.nextIndex(this.activeCardIdx)];
+    }
+
+    public previousCard(): GameCard {
+        return this.cards[this.previousIndex(this.activeCardIdx)];
+    }
+
     public advanceIndexes(turn: Turn) {
         let cardCount = CARDS;
         let currentIdx = this.activeCardIdx;
@@ -51,5 +59,9 @@ export class Deck {
 
     public nextIndex(idx: number): number {
         return ++idx % CARDS;
+    }
+
+    public previousIndex(idx: number): number {
+        return (CARDS + idx -1) % CARDS;
     }
 }
