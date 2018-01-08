@@ -7,7 +7,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "build": "tsc",
-    "test": "node_modules/mocha/bin/mocha -r ts-node/register test/**/*spec.ts"
+    "test": "mocha -r ts-node/register test/**/*spec.ts"
   },
   "keywords": [],
   "author": "",
