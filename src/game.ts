@@ -9,7 +9,6 @@ export type Turn = 'attacker' | 'defender';
 export const CARDS = 5;
 
 export class Game {
-
     private p1: Deck;
     private p2: Deck;
 
@@ -84,7 +83,7 @@ export class Game {
     }
 
     private advanceIndexes(): void {
-        if (this.turn = 'p1') {
+        if (this.turn == 'p1') {
             this.p1.advanceIndexes('attacker');
             this.p2.advanceIndexes('defender');
         } else {
@@ -94,11 +93,27 @@ export class Game {
     }
 
     private switchTurn(): void {
-        if (this.turn = 'p1') {
+        if (this.turn == 'p1') {
             this.turn = 'p2';
         } else {
             this.turn = 'p1';
         }
     }
 
+    toString(): string {
+        return `Round: ${this.round}, State: ${this.state}, ${this.stateDescription()}\n${this.p1}\n${this.p2}`;
+    }
+
+    private stateDescription(): string {
+        if(this.isFinished()) {
+            if (this.p1.areAllDead() && this.p2.areAllDead()) {
+                return 'Result: Tie';
+            } else if (this.p1.areAllDead()) {
+                return 'Result: P2 wins';
+            } else {
+                return 'Result: P1 wins';
+            }
+        }
+        return `Turn: ${this.turn}`;
+    }
 }

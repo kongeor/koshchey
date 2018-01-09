@@ -15,7 +15,7 @@ export class GameCard {
     this._attack = this._initialAttack = card.attack;
     this._life = this._initialLife = card.life;
     this._luck = card.luck;
-    // this.abilities = _.map(card.abilities, CardAbility.create); // TODO
+    this._abilities = _.map(card.abilities, CardAbility.createFromNum);
   }
 
   get life(): number {
@@ -64,6 +64,11 @@ export class GameCard {
     if (this.isAlive() && this.life < this._initialLife) {
       this._life += 1;
     }
+  }
+
+  toString(): string {
+    const abString = _.map(this._abilities, a => a.toString()).join();
+    return `{ ${this._attack}/${this._initialAttack} ⚔ - ${this._life}/${this._initialLife} ♥ - ${this._luck} ☘ - [${abString}] }`;
   }
 
 }

@@ -6,7 +6,13 @@ class Runner {
         const p1 = Gen.genSimpleDeck();
         const p2 = Gen.genSimpleDeck();
         const game = new Game(p1, p2);
-        game.play();
+        while(!game.isFinished()) {
+            console.log(game.toString());
+            console.log();
+            game.playRound();
+        }
+        console.log(game.toString());
+        console.log();
         return 0;
     }
 }

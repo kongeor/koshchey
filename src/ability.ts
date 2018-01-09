@@ -60,16 +60,28 @@ export abstract class CardAbility {
   }
 
   public static createFromNum(from: number): CardAbility {
-    const ability = this.create(from);
+    const ability = CardAbility.create(from);
     if (ability == undefined) {
       throw `Invalid ability identifier: ${from}`;
     }
     return ability;
   }
+
+  public static allAbilities(): number[] {
+    const nums: number[] = [];
+    for (var ab in Ability) {
+      const numAb = parseInt(ab, 10);
+      if (numAb > 0) {
+        nums.push(numAb);
+      }
+    }
+    return nums;
+  }
+
+  abstract toString(): string;
 }
 
 class UndeadAbility extends CardAbility {
-
   isPassive(): boolean {
     return true;
   }
@@ -86,6 +98,10 @@ class UndeadAbility extends CardAbility {
   perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
     // TODO when is the proper time to resurrect?
     attackingCard.resurrect();
+  }
+
+  toString(): string {
+    return `☭`
   }
 
 }
@@ -118,6 +134,10 @@ export class HealingAbility extends CardAbility {
     }
   }
 
+  toString(): string {
+    return '☠';
+  }
+
 }
 
 class RotationAbility extends CardAbility {
@@ -136,6 +156,10 @@ class RotationAbility extends CardAbility {
 
   perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
     throw new Error("Method not implemented.");
+  }
+
+  toString(): string {
+    return '↺';
   }
 
 }
@@ -158,6 +182,9 @@ class ConfusionAbility extends CardAbility {
     throw new Error("Method not implemented.");
   }
 
+  toString(): string {
+    return '☹';
+  }
 }
 
 class DeathtouchAbility extends CardAbility {
@@ -178,6 +205,9 @@ class DeathtouchAbility extends CardAbility {
     throw new Error("Method not implemented.");
   }
 
+  toString(): string {
+    return '✞';
+  }
 }
 
 class BloodlustAbility extends CardAbility {
@@ -197,6 +227,10 @@ class BloodlustAbility extends CardAbility {
 
   perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
     throw new Error("Method not implemented.");
+  }
+
+  toString(): string {
+    return '💧';
   }
 
 
