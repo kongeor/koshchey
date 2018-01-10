@@ -28,6 +28,10 @@ export class Game {
         this.turn = "p1";
     }
 
+    static dummy(): Game {
+        return new Game(Deck.dummy(), Deck.dummy());
+    }
+
     public isFinished(): boolean {
         return this.p1.areAllDead() || this.p2.areAllDead();
     }
@@ -71,12 +75,14 @@ export class Game {
                 attacker, defender, this);
         }
 
-        const damage = attackingCard.attackCard(defendingCard);
+        let attackingAbility = attackingCard.attackingAbility;
 
-        const counter = Math.random() > 0.5;
-
-        if (counter) {
-            defendingCard.attackCard(attackingCard);
+        let damage = 0; // TODO
+        if (attackingAbility) {
+            attackingAbility.perform(attackingCard, defendingCard, 
+                attacker, defender, this);
+        } else {
+            damage = attackingCard.playCardAgainst(defendingCard);
         }
 
         return damage;

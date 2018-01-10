@@ -13,6 +13,10 @@ export class Deck {
         this.activeCardIdx = 0;
     }
 
+    static dummy(): Deck {
+        return new Deck([]);
+    }
+
     public areAllDead(): boolean {
         return _.every(this.cards, c => c.isDead());
     }
@@ -33,28 +37,39 @@ export class Deck {
         return this.cards[this.previousIndex(this.activeCardIdx)];
     }
 
-    public advanceIndexes(turn: Turn) {
+    public previousAliveCard(): GameCard | undefined {
+        let currentIdx;
+        do {
+            currentIdx = this.previousIndex(this.activeCardIdx);
+        } while(currentIdx !== this.activeCardIdx && this.cardAt(currentIdx));
+
+        if (currentIdx !== this.activeCardIdx) {
+            return this.cardAt(currentIdx);
+        }
+    }
+
+    public advanceIndexes(turn: Turn): boolean {
         let cardCount = CARDS;
         let currentIdx = this.activeCardIdx;
 
         if (turn === 'attacker') {
-            // for attackers we start from the next card
-            // so we need to check one card less
-            cardCount--;
             currentIdx = this.nextIndex(this.activeCardIdx);
         }
 
         // TODO improve
         // technically as soon as we visit the same card it
         // means that we can stop looping
+        let found = false;
         for (var i = 0; i < cardCount; i++) {
             if (this.cardAt(currentIdx).isAlive()) {
+                found = true;
                 break;
             }
             currentIdx = this.nextIndex(this.activeCardIdx);
         }
 
         this.activeCardIdx = currentIdx;
+        return found;
     }
 
     public nextIndex(idx: number): number {
@@ -63,6 +78,17 @@ export class Deck {
 
     public previousIndex(idx: number): number {
         return (CARDS + idx -1) % CARDS;
+    }
+
+    public rotate(n: number): void {
+        if (Math.abs(n) >= CARDS) {
+            throw "abs(n) must be less than the number of cards in the deck";
+        }
+        let steps = n;
+        if (n < 0) {
+            steps = CARDS - n;
+        }
+        this.cards = _.take(_.drop(_.concat(this.cards, this.cards), steps), CARDS);
     }
 
     toString(): string {

@@ -144,7 +144,7 @@ export class HealingAbility extends CardAbility {
   }
 
   toString(): string {
-    return '☠';
+    return '✚';
   }
 
 }
@@ -168,7 +168,7 @@ class RotationAbility extends CardAbility {
   }
 
   perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
-    throw new Error("Method not implemented.");
+    defender.rotate(1);
   }
 
   toString(): string {
@@ -196,7 +196,10 @@ class ConfusionAbility extends CardAbility {
   }
 
   perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
-    throw new Error("Method not implemented.");
+    let card = attacker.previousAliveCard();
+    if (card) {
+        attackingCard.playCardAgainst(card); 
+    }
   }
 
   toString(): string {
@@ -223,11 +226,13 @@ class DeathtouchAbility extends CardAbility {
   }
 
   perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
-    throw new Error("Method not implemented.");
+    // TODO create a defending ability
+    // TODO create a class method
+    defendingCard.reduceLife(defendingCard.life);
   }
 
   toString(): string {
-    return '✞';
+    return '☠';
   }
 }
 
@@ -251,7 +256,12 @@ class BloodlustAbility extends CardAbility {
 
 
   perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
-    throw new Error("Method not implemented.");
+    let killed;
+    do  {
+        const card = defender.getActiveCard();
+        attackingCard.playCardAgainst(card);
+        killed = card.isDead();
+    } while(attackingCard.isAlive() && killed && defender.advanceIndexes('attacker'));
   }
 
   toString(): string {

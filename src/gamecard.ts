@@ -1,6 +1,8 @@
 import { Card } from './card';
 import { CardAbility, Ability } from './ability';
 import * as _ from 'lodash';
+import { Deck } from './deck';
+import { Game } from './game';
 
 export class GameCard {
 
@@ -43,9 +45,30 @@ export class GameCard {
     return !this.isAlive();
   }
 
-  attackCard(other: GameCard): number {
+  private attackCard(other: GameCard): number {
     const damage = Math.min(this._attack, other.life);
     other.reduceLife(damage);
+    return damage;
+  }
+
+  playCardAgainst(other: GameCard): number {
+    // TODO in some cases like confusion 
+    // the defending ability must come first
+    // in these cases the order of the cards/parameters also matters
+    const damage = this.attackCard(other);
+
+    if (other.defendingAbility) {
+        // TODO
+        other.defendingAbility.perform(other, this, Deck.dummy(), Deck.dummy(), 
+        Game.dummy());
+    } else {
+        const counter = Math.random() > 0.7;
+
+        if (counter) {
+          other.attackCard(this);
+        }
+    }
+
     return damage;
   }
 
