@@ -27,6 +27,7 @@ export enum Ability {
 
 export abstract class CardAbility {
 
+  abstract ability(): Ability;
   /**
    * Passive abilities will be played before attacking. Such
    * abilities include healing, resurrecting, shuffling, etc.
@@ -82,6 +83,11 @@ export abstract class CardAbility {
 }
 
 class UndeadAbility extends CardAbility {
+
+  ability(): Ability {
+    return Ability.Undead;
+  }
+
   isPassive(): boolean {
     return true;
   }
@@ -93,7 +99,6 @@ class UndeadAbility extends CardAbility {
   isAttacking(): boolean {
     return false;
   }
-
 
   perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
     // TODO when is the proper time to resurrect?
@@ -110,6 +115,10 @@ class UndeadAbility extends CardAbility {
  * Heals the live creatures next to this card
  */
 export class HealingAbility extends CardAbility {
+
+  ability(): Ability {
+    return Ability.Healing;
+  }
 
   isPassive(): boolean {
     return true;
@@ -142,6 +151,10 @@ export class HealingAbility extends CardAbility {
 
 class RotationAbility extends CardAbility {
 
+  ability(): Ability {
+    return Ability.Rotate1;
+  }
+
   isPassive(): boolean {
     return true;
   }
@@ -166,6 +179,10 @@ class RotationAbility extends CardAbility {
 
 class ConfusionAbility extends CardAbility {
 
+  ability(): Ability {
+    return Ability.Confusion;
+  }
+
   isPassive(): boolean {
     return false;
   }
@@ -189,6 +206,10 @@ class ConfusionAbility extends CardAbility {
 
 class DeathtouchAbility extends CardAbility {
 
+  ability(): Ability {
+    return Ability.Deathtouch;
+  }
+
   isPassive(): boolean {
     return false;
   }
@@ -211,6 +232,10 @@ class DeathtouchAbility extends CardAbility {
 }
 
 class BloodlustAbility extends CardAbility {
+
+  ability(): Ability {
+    return Ability.Bloodlust;
+  }
 
   isPassive(): boolean {
     return true;
