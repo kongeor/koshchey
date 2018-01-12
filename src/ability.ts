@@ -1,6 +1,8 @@
 import { GameCard } from "./gamecard";
 import { Deck } from "./deck";
 import { Game } from "./game";
+import { MoveLog } from "./iface";
+import * as _ from "lodash";
 
 export enum Ability {
   // passive
@@ -53,7 +55,7 @@ export abstract class CardAbility {
     return false;
   }
 
-  abstract perform(attacker: Deck, defender: Deck): void;
+  abstract perform(attacker: Deck, defender: Deck): MoveLog[];
 
   public static create(from: Ability): CardAbility {
     switch (from) {
@@ -98,9 +100,12 @@ class UndeadAbility extends CardAbility {
     return true;
   }
 
-  perform(attacker: Deck, defender: Deck): void {
-    // TODO when is the proper time to resurrect?
-    attacker.getActiveCard().resurrect();
+  perform(attacker: Deck, defender: Deck): MoveLog[] {
+    const source = attacker.getActiveCard();
+    const resurrected = source.resurrect();
+    return [{'source': source.asData(), 'ability': this.ability(), 
+      'resurrected': resurrected
+    }];
   }
 
   toString(): string {
@@ -122,15 +127,21 @@ export class HealingAbility extends CardAbility {
     return true;
   }
 
-  perform(attacker: Deck, defender: Deck): void {
+  perform(attacker: Deck, defender: Deck): MoveLog[] {
     const next = attacker.nextCard();
+    const log: MoveLog[] = [];
     if (next.isAlive()) {
-      next.heal();
+      const healing = next.heal();
+      log.push({'source': attacker.getActiveCard().asData(),
+        'target': next.asData(), 'healing': healing});
     }
     const previous = attacker.previousCard();
     if (previous.isAlive()) {
-      previous.heal();
+      const healing = previous.heal();
+      log.push({'source': attacker.getActiveCard().asData(),
+        'target': previous.asData(), 'healing': healing});
     }
+    return log;
   }
 
   toString(): string {
@@ -149,8 +160,9 @@ class RotationAbility extends CardAbility {
     return true;
   }
 
-  perform(attacker: Deck, defender: Deck): void {
+  perform(attacker: Deck, defender: Deck): MoveLog[] {
     defender.rotate(1);
+    return [{'source': attacker.getActiveCard().asData(), 'rotation': 1}]
   }
 
   toString(): string {
@@ -169,11 +181,13 @@ class ConfusionAbility extends CardAbility {
     return true;
   }
 
-  perform(attacker: Deck, defender: Deck): void {
+  perform(attacker: Deck, defender: Deck): MoveLog[] {
     let card = attacker.previousAliveCard();
     if (card) {
-        attacker.getActiveCard().playCardAgainst(card); 
+        const attackingCard = attacker.getActiveCard();
+        return attackingCard.playCardAgainst(card); 
     }
+    return [];
   }
 
   toString(): string {
@@ -191,11 +205,14 @@ class DeathtouchAbility extends CardAbility {
     return true;
   }
 
-  perform(attacker: Deck, defender: Deck): void {
+  perform(attacker: Deck, defender: Deck): MoveLog[] {
     // TODO create a defending ability
     // TODO create a class method
     const defendingCard = defender.getActiveCard();
     defendingCard.reduceLife(defendingCard.life);
+    return [{'source': attacker.getActiveCard().asData(), 
+      'target': defendingCard.asData(), 'ability': this.ability(),
+      'damage': defendingCard.life}];
   }
 
   toString(): string {
@@ -213,13 +230,15 @@ class BloodlustAbility extends CardAbility {
     return true;
   }
 
-  perform(attacker: Deck, defender: Deck): void {
+  perform(attacker: Deck, defender: Deck): MoveLog[] {
     let killed;
+    let logs: MoveLog[] = [];
     do  {
         const card = defender.getActiveCard();
-        attacker.getActiveCard().playCardAgainst(card);
+        logs = _.concat(logs, attacker.getActiveCard().playCardAgainst(card));
         killed = card.isDead();
     } while(attacker.getActiveCard().isAlive() && killed && defender.advanceIndexes('attacker'));
+    return logs;
   }
 
   toString(): string {

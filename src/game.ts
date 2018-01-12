@@ -1,6 +1,7 @@
 import { Deck } from './deck';
+import { TurnLog, MoveLog } from './iface';
 
-type Player = "p1" | "p2";
+export type Player = "p1" | "p2";
 
 type State = "active" | "ended";
 
@@ -18,6 +19,8 @@ export class Game {
 
     private turn: Player;
 
+    private _logs: TurnLog[];
+
     constructor(p1: Deck, p2: Deck) {
         this.p1 = p1;
         this.p2 = p2;
@@ -29,10 +32,16 @@ export class Game {
         this.state = "active";
 
         this.turn = "p1";
+
+        this._logs = [];
     }
 
     static dummy(): Game {
         return new Game(Deck.dummy(), Deck.dummy());
+    }
+
+    get logs(): TurnLog[] {
+        return this._logs;
     }
 
     public isFinished(): boolean {
@@ -53,7 +62,7 @@ export class Game {
 
     public playRound() {
         if (this.state === 'active') {
-            this.playTurn();
+            this._logs.push(this.playTurn());
             this.updateState();
             this.advanceIndexes();
             this.switchTurn();
@@ -61,32 +70,39 @@ export class Game {
         }
     }
 
-    private playTurn(): number {
+    private playTurn(): TurnLog {
         switch (this.turn) {
             case 'p1': return this.playDeckAgainst(this.p1, this.p2);
             case 'p2': return this.playDeckAgainst(this.p2, this.p1);
         }
     }
 
-    private playDeckAgainst(attacker: Deck, defender: Deck): number {
+    private playDeckAgainst(attacker: Deck, defender: Deck): TurnLog {
         let attackingCard = attacker.getActiveCard();
         let defendingCard = defender.getActiveCard();
 
+        let moveLogs: MoveLog[] = [];
+
         let passiveAbility = attackingCard.preRoundAbility;
         if (passiveAbility) {
-            passiveAbility.perform(attacker, defender);
+            moveLogs = passiveAbility.perform(attacker, defender);
         }
 
         let attackingAbility = attackingCard.attackingAbility;
 
-        let damage = 0; // TODO
         if (attackingAbility) {
-            attackingAbility.perform(attacker, defender);
+            moveLogs = moveLogs.concat(attackingAbility.perform(attacker, defender));
         } else {
-            damage = attackingCard.playCardAgainst(defendingCard);
+            moveLogs = moveLogs.concat(attackingCard.playCardAgainst(defendingCard));
         }
 
-        return damage;
+        return {
+            'p1': attacker.asData(),
+            'p2': defender.asData(),
+            'round': this.round,
+            'turn': this.turn,
+            'moves': moveLogs
+        };
     }
 
     private advanceIndexes(): void {

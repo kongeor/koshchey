@@ -3,6 +3,7 @@ import { CardAbility, Ability } from './ability';
 import * as _ from 'lodash';
 import { Deck } from './deck';
 import { Game } from './game';
+import { CardData, MoveLog } from './iface';
 
 export class GameCard {
 
@@ -61,41 +62,62 @@ export class GameCard {
     return damage;
   }
 
-  playCardAgainst(other: GameCard): number {
+  playCardAgainst(other: GameCard): MoveLog[] {
     // TODO in some cases like confusion 
     // the defending ability must come first
     // in these cases the order of the cards/parameters also matters
     const damage = this.attackCard(other);
 
+    let logs: MoveLog[] = [{'source': this.asData(), 'target': other.asData(),
+      'damage': damage}];
+
     if (other.defendingAbility) {
-        // TODO
-        other.defendingAbility.perform(this._deck, other._deck);
+        // TODO logs
+        logs = logs.concat(other.defendingAbility.perform(this._deck, other._deck));
     } else {
         const counter = Math.random() > 0.7;
 
         if (counter) {
           other.attackCard(this);
+          logs.push({'source': this.asData(), 'target': other.asData(),
+            'damage': damage, 'counter': true
+          })
         }
     }
-
-    return damage;
+    return logs;
   }
 
   reduceLife(amount: number): void {
     this._life -= amount;
   }
 
-  resurrect(): void {
+  resurrect(): boolean {
     // TODO check: passive activities can be performed in GameCard
     if (this.isDead()) {
       this._life += 1;
+      return true;
     }
+    return false;
   }
 
-  heal(): void {
+  heal(): number {
     if (this.isAlive() && this.life < this._initialLife) {
+      const before = this._life;
       this._life += 1;
+      return this._life - before;
     }
+    return 0;
+  }
+
+  asData(): CardData {
+    return {
+      'attack': this._attack,
+      'initialAttack': this._initialAttack,
+      'life': this._life,
+      'initialLife': this._initialLife,
+      'luck':this._luck,
+      'abilities': this._abilities.map(c => Ability[c.ability()])
+    };
   }
 
   toString(): string {
