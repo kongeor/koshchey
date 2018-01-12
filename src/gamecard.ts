@@ -26,13 +26,17 @@ export class GameCard {
     this._deck = deck;
   }
 
+  get deck(): Deck {
+    return this._deck;
+  }
+
   get life(): number {
     return this._life;
   }
 
   // ability filters
-  get passiveAbility(): CardAbility | undefined {
-    return _.head(_.filter(this._abilities, a => a.isPassive()));
+  get preRoundAbility(): CardAbility | undefined {
+    return _.head(_.filter(this._abilities, a => a.isPreRound()));
   }
 
   get defendingAbility(): CardAbility | undefined {
@@ -65,8 +69,7 @@ export class GameCard {
 
     if (other.defendingAbility) {
         // TODO
-        other.defendingAbility.perform(other, this, Deck.dummy(), Deck.dummy(), 
-        Game.dummy());
+        other.defendingAbility.perform(this._deck, other._deck);
     } else {
         const counter = Math.random() > 0.7;
 

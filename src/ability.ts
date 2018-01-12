@@ -28,26 +28,32 @@ export enum Ability {
 export abstract class CardAbility {
 
   abstract ability(): Ability;
+
   /**
    * Passive abilities will be played before attacking. Such
    * abilities include healing, resurrecting, shuffling, etc.
    */
-  abstract isPassive(): boolean;
+  public isPreRound(): boolean {
+    return false;
+  }
 
   /**
    * Defending card will be picked when this card is being attacked
    * by another one
    */
-  abstract isDefending(): boolean;
+  public isDefending(): boolean {
+    return false;
+  }
 
   /**
    * Attacking abilities can also alter card indexes, switch turns,
    * shuffle etc.
    */
-  abstract isAttacking(): boolean;
+  public isAttacking(): boolean {
+    return false;
+  }
 
-  abstract perform(attackingCard: GameCard, defendingCard: GameCard,
-    attacker: Deck, defender: Deck, game: Game): void;
+  abstract perform(attacker: Deck, defender: Deck): void;
 
   public static create(from: Ability): CardAbility {
     switch (from) {
@@ -88,21 +94,13 @@ class UndeadAbility extends CardAbility {
     return Ability.Undead;
   }
 
-  isPassive(): boolean {
+  isPreRound(): boolean {
     return true;
   }
 
-  isDefending(): boolean {
-    return false;
-  }
-
-  isAttacking(): boolean {
-    return false;
-  }
-
-  perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
+  perform(attacker: Deck, defender: Deck): void {
     // TODO when is the proper time to resurrect?
-    attackingCard.resurrect();
+    attacker.getActiveCard().resurrect();
   }
 
   toString(): string {
@@ -120,19 +118,11 @@ export class HealingAbility extends CardAbility {
     return Ability.Healing;
   }
 
-  isPassive(): boolean {
+  isPreRound(): boolean {
     return true;
   }
 
-  isDefending(): boolean {
-    return false;
-  }
-
-  isAttacking(): boolean {
-    return false;
-  }
-
-  perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
+  perform(attacker: Deck, defender: Deck): void {
     const next = attacker.nextCard();
     if (next.isAlive()) {
       next.heal();
@@ -155,19 +145,11 @@ class RotationAbility extends CardAbility {
     return Ability.Rotate1;
   }
 
-  isPassive(): boolean {
+  isPreRound(): boolean {
     return true;
   }
 
-  isDefending(): boolean {
-    return false;
-  }
-
-  isAttacking(): boolean {
-    return false;
-  }
-
-  perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
+  perform(attacker: Deck, defender: Deck): void {
     defender.rotate(1);
   }
 
@@ -183,22 +165,14 @@ class ConfusionAbility extends CardAbility {
     return Ability.Confusion;
   }
 
-  isPassive(): boolean {
-    return false;
-  }
-
   isDefending(): boolean {
     return true;
   }
 
-  isAttacking(): boolean {
-    return false;
-  }
-
-  perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
+  perform(attacker: Deck, defender: Deck): void {
     let card = attacker.previousAliveCard();
     if (card) {
-        attackingCard.playCardAgainst(card); 
+        attacker.getActiveCard().playCardAgainst(card); 
     }
   }
 
@@ -213,21 +187,14 @@ class DeathtouchAbility extends CardAbility {
     return Ability.Deathtouch;
   }
 
-  isPassive(): boolean {
-    return false;
-  }
-
-  isDefending(): boolean {
-    return false;
-  }
-
   isAttacking(): boolean {
     return true;
   }
 
-  perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
+  perform(attacker: Deck, defender: Deck): void {
     // TODO create a defending ability
     // TODO create a class method
+    const defendingCard = defender.getActiveCard();
     defendingCard.reduceLife(defendingCard.life);
   }
 
@@ -242,30 +209,21 @@ class BloodlustAbility extends CardAbility {
     return Ability.Bloodlust;
   }
 
-  isPassive(): boolean {
-    return true;
-  }
-
-  isDefending(): boolean {
-    return false;
-  }
-
   isAttacking(): boolean {
     return true;
   }
 
-
-  perform(attackingCard: GameCard, defendingCard: GameCard, attacker: Deck, defender: Deck, game: Game): void {
+  perform(attacker: Deck, defender: Deck): void {
     let killed;
     do  {
         const card = defender.getActiveCard();
-        attackingCard.playCardAgainst(card);
+        attacker.getActiveCard().playCardAgainst(card);
         killed = card.isDead();
-    } while(attackingCard.isAlive() && killed && defender.advanceIndexes('attacker'));
+    } while(attacker.getActiveCard().isAlive() && killed && defender.advanceIndexes('attacker'));
   }
 
   toString(): string {
-    return '💧';
+    return '⚇';
   }
 
 

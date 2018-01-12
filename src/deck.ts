@@ -47,10 +47,12 @@ export class Deck {
     }
 
     public previousAliveCard(): GameCard | undefined {
-        let currentIdx;
-        do {
-            currentIdx = this.previousIndex(this.activeCardIdx);
-        } while(currentIdx !== this.activeCardIdx && this.cardAt(currentIdx));
+
+        let currentIdx = this.previousIndex(this.activeCardIdx);
+
+        while (currentIdx !== this.activeCardIdx && !this.cardAt(currentIdx).isAlive()) {
+            currentIdx = this.previousIndex(currentIdx);
+        }
 
         if (currentIdx !== this.activeCardIdx) {
             return this.cardAt(currentIdx);

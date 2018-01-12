@@ -72,18 +72,16 @@ export class Game {
         let attackingCard = attacker.getActiveCard();
         let defendingCard = defender.getActiveCard();
 
-        let passiveAbility = attackingCard.passiveAbility;
+        let passiveAbility = attackingCard.preRoundAbility;
         if (passiveAbility) {
-            passiveAbility.perform(attackingCard, defendingCard,
-                attacker, defender, this);
+            passiveAbility.perform(attacker, defender);
         }
 
         let attackingAbility = attackingCard.attackingAbility;
 
         let damage = 0; // TODO
         if (attackingAbility) {
-            attackingAbility.perform(attackingCard, defendingCard, 
-                attacker, defender, this);
+            attackingAbility.perform(attacker, defender);
         } else {
             damage = attackingCard.playCardAgainst(defendingCard);
         }
