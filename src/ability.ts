@@ -162,7 +162,8 @@ class RotationAbility extends CardAbility {
 
   perform(attacker: Deck, defender: Deck): MoveLog[] {
     defender.rotate(1);
-    return [{'source': attacker.getActiveCard().asData(), 'rotation': 1}]
+    return [{'source': attacker.getActiveCard().asData(), 'rotation': 1,
+      'ability': this.ability()}]
   }
 
   toString(): string {
@@ -185,7 +186,8 @@ class ConfusionAbility extends CardAbility {
     let card = attacker.previousAliveCard();
     if (card) {
         const attackingCard = attacker.getActiveCard();
-        return attackingCard.playCardAgainst(card); 
+        const logs: MoveLog[] = attackingCard.playCardAgainst(card); 
+        return logs.map(log => _.merge(log, {'ability': this.ability()}));
     }
     return [];
   }
@@ -235,10 +237,10 @@ class BloodlustAbility extends CardAbility {
     let logs: MoveLog[] = [];
     do  {
         const card = defender.getActiveCard();
-        logs = _.concat(logs, attacker.getActiveCard().playCardAgainst(card));
+        logs = logs.concat(attacker.getActiveCard().playCardAgainst(card));
         killed = card.isDead();
     } while(attacker.getActiveCard().isAlive() && killed && defender.advanceIndexes('attacker'));
-    return logs;
+    return logs.map(log => _.merge(log, {'ability': this.ability()}));
   }
 
   toString(): string {
