@@ -22,6 +22,9 @@ export class Game {
         this.p1 = p1;
         this.p2 = p2;
 
+        this.p1.game = this;
+        this.p2.game = this;
+
         this.round = 0;
         this.state = "active";
 

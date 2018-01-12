@@ -13,11 +13,17 @@ export class GameCard {
   private _luck: number;
   private _abilities: CardAbility[];
 
+  private _deck: Deck;
+
   constructor(card: Card) {
     this._attack = this._initialAttack = card.attack;
     this._life = this._initialLife = card.life;
     this._luck = card.luck;
     this._abilities = _.map(card.abilities, CardAbility.createFromNum);
+  }
+
+  set deck(deck: Deck) {
+    this._deck = deck;
   }
 
   get life(): number {
