@@ -23,8 +23,7 @@ export class Gen {
     }
 
     public static genFlatCard(): GameCard {
-        return new GameCard({'attack': 3, 'life': 3,
-             'luck': 5, abilities: []});
+        return new GameCard({'attack': 3, 'life': 3, 'luck': 5, abilities: []});
     }
 
     public static getFlatDeck(): Deck {
