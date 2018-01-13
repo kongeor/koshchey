@@ -21,4 +21,13 @@ export class Gen {
     public static genSimpleDeck(): Deck {
         return new Deck(_.times(5, this.genSimpleCard));
     }
+
+    public static genFlatCard(): GameCard {
+        return new GameCard({'attack': 3, 'life': 3,
+             'luck': 5, abilities: []});
+    }
+
+    public static getFlatDeck(): Deck {
+        return new Deck(_.times(5, this.genFlatCard));
+    }
 }
