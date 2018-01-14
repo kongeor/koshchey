@@ -95,7 +95,7 @@ export class Game {
         this.updateState();
 
         // TODO hack
-        if (this.isFinished) {
+        if (!this.isFinished()) {
             const postRoundAbility = attackingCard.postRoundAbilitiy;
             if (postRoundAbility) {
                 moveLogs = moveLogs.concat(postRoundAbility.perform(attacker, defender));
