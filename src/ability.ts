@@ -32,8 +32,8 @@ export abstract class CardAbility {
   abstract ability(): Ability;
 
   /**
-   * Passive abilities will be played before attacking. Such
-   * abilities include healing, resurrecting, shuffling, etc.
+   * Pre round abilities will be played before attacking. Such
+   * abilities include healing, rotating, etc.
    */
   public isPreRound(): boolean {
     return false;
@@ -52,6 +52,14 @@ export abstract class CardAbility {
    * shuffle etc.
    */
   public isAttacking(): boolean {
+    return false;
+  }
+
+  /**
+   * Post round abilities will be performed after end game check has been
+   * made. This will allow abilities like resurrection to take place.
+   */
+  public isPostRound(): boolean {
     return false;
   }
 
@@ -96,7 +104,7 @@ class UndeadAbility extends CardAbility {
     return Ability.Undead;
   }
 
-  isPreRound(): boolean {
+  isPostRound(): boolean {
     return true;
   }
 

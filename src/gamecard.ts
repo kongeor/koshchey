@@ -48,6 +48,10 @@ export class GameCard {
     return _.head(_.filter(this._abilities, a => a.isAttacking()));
   }
 
+  get postRoundAbilitiy(): CardAbility | undefined {
+    return _.head(_.filter(this._abilities, a => a.isPostRound()));
+  }
+
   isAlive(): boolean {
     return this._life > 0;
   }

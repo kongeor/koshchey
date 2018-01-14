@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 
 import { GameCard } from './gamecard';
 import { CARDS, Turn, Game } from './game';
-import { DeckData } from './iface';
+import { DeckData, MoveLog } from './iface';
 
 export class Deck {
 
@@ -33,6 +33,10 @@ export class Deck {
 
     public getActiveCard(): GameCard {
         return this.cardAt(this.activeCardIdx);
+    }
+
+    public getActiveCardIdx(): number {
+        return this.activeCardIdx;
     }
 
     public cardAt(idx: number): GameCard {
@@ -101,6 +105,19 @@ export class Deck {
             steps = CARDS - n;
         }
         this.cards = _.take(_.drop(_.concat(this.cards, this.cards), steps), CARDS);
+    }
+
+    // TODO not used atm
+    public performPostRoundAbilities(): MoveLog[] {
+        let logs: MoveLog[] = [];
+        this.cards.forEach(card => {
+            if (card.postRoundAbilitiy) {
+                // TODO should provide a method
+                // to override the active card
+                logs = logs.concat(card.postRoundAbilitiy.perform(this, Deck.dummy()));
+            }
+        })
+        return logs;
     }
 
     toString(): string {

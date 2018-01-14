@@ -63,10 +63,6 @@ export class Game {
     public playRound() {
         if (this.state === 'active') {
             this._logs.push(this.playTurn());
-            this.updateState();
-            this.advanceIndexes();
-            this.switchTurn();
-            this.round++;
         }
     }
 
@@ -96,6 +92,20 @@ export class Game {
             moveLogs = moveLogs.concat(attackingCard.playCardAgainst(defendingCard));
         }
 
+        this.updateState();
+
+        // TODO hack
+        if (this.isFinished) {
+            const postRoundAbility = attackingCard.postRoundAbilitiy;
+            if (postRoundAbility) {
+                moveLogs = moveLogs.concat(postRoundAbility.perform(attacker, defender));
+            }
+        }
+
+        this.advanceIndexes();
+        this.switchTurn();
+        this.round++;
+
         return {
             'p1': attacker.asData(),
             'p2': defender.asData(),
@@ -124,7 +134,7 @@ export class Game {
     }
 
     toString(): string {
-        return `Round: ${this.round}, State: ${this.state}, ${this.stateDescription()}\n${this.p1}\n${this.p2}`;
+        return `Round: ${this.round}, P1 Idx: ${this.p1.getActiveCardIdx()}, P2 Idx: ${this.p2.getActiveCardIdx()}, State: ${this.state}, ${this.stateDescription()}\n${this.p1}\n${this.p2}`;
     }
 
     private stateDescription(): string {
