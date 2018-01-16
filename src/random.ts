@@ -15,26 +15,49 @@ export class Random {
         return val;
     }
 
+    nextInt(to: number): number {
+        const num = this.nextDouble();
+        return Math.floor(num * to);
+    }
+
+    nextIntRange(from: number, to: number): number {
+        const num = this.nextDouble();
+        return Math.floor(num * (to - from) + from);
+    }
+
     private resetSeed(val: any): void {
         this._seed = val;
     } 
 }
 
-const rnd = new Random("man");
+const rnd = new Random("5");
 
-console.log(rnd.nextDouble());
-console.log(rnd.nextDouble());
-console.log(rnd.nextDouble());
-console.log(rnd.nextDouble());
-console.log(rnd.nextDouble());
-console.log(rnd.nextDouble());
-console.log(rnd.nextDouble());
+console.log(rnd.nextIntRange(5, 8));
+console.log(rnd.nextIntRange(5, 8));
+console.log(rnd.nextIntRange(5, 8));
 
-const vals = _.times(10000, x => rnd.nextDouble());
+console.log(rnd.nextInt(3));
+console.log(rnd.nextInt(3));
+console.log(rnd.nextInt(3));
 
-const freqs = _
-    .chain(vals)
-    .map(x => x * 10)
-    .groupBy(Math.floor).value();
+console.log(rnd.nextIntRange(5, 8));
+console.log(rnd.nextIntRange(5, 8));
+console.log(rnd.nextIntRange(5, 8));
 
-console.log(freqs);
+
+// console.log(rnd.nextDouble());
+// console.log(rnd.nextDouble());
+// console.log(rnd.nextDouble());
+// console.log(rnd.nextDouble());
+// console.log(rnd.nextDouble());
+// console.log(rnd.nextDouble());
+// console.log(rnd.nextDouble());
+
+// const vals = _.times(10000, x => rnd.nextDouble());
+
+// const freqs = _
+//     .chain(vals)
+//     .map(x => x * 10)
+//     .groupBy(Math.floor).value();
+
+// console.log(freqs);
