@@ -60,21 +60,17 @@ export class GameCard {
     return !this.isAlive();
   }
 
-  private attackCard(other: GameCard): number {
-    const damage = Math.min(this._attack, other.life);
-    other.reduceLife(damage);
-    return damage;
+  attackCard(other: GameCard): MoveLog[] {
+    const damage = other.reduceLife(this._attack);
+    let logs: MoveLog[] = [{'source': this.asData(), 'target': other.asData(),
+      'damage': damage}];
+    return logs;
   }
 
   playCardAgainst(other: GameCard): MoveLog[] {
-    // TODO in some cases like confusion 
-    // the defending ability must come first
-    // in these cases the order of the cards/parameters also matters
-    const damage = this.attackCard(other);
+    let logs: MoveLog[] = this.attackCard(other);
 
-    let logs: MoveLog[] = [{'source': this.asData(), 'target': other.asData(),
-      'damage': damage}];
-
+    const defendingAbility = other.defendingAbility;
     if (other.defendingAbility) {
         // TODO logs
         logs = logs.concat(other.defendingAbility.perform(this._deck, other._deck));
@@ -82,17 +78,17 @@ export class GameCard {
         const counter = Math.random() > 0.7;
 
         if (counter) {
-          other.attackCard(this);
-          logs.push({'source': this.asData(), 'target': other.asData(),
-            'damage': damage, 'counter': true
-          })
+          const counterLogs = other.attackCard(this);
+          logs = logs.concat(counterLogs.map(log => _.merge(log, {'counter': true})));
         }
     }
     return logs;
   }
 
-  reduceLife(amount: number): void {
-    this._life -= amount;
+  reduceLife(amount: number): number {
+    const damage = Math.min(amount, this.life);
+    this._life -= damage;
+    return damage;
   }
 
   resurrect(): boolean {

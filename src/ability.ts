@@ -63,6 +63,13 @@ export abstract class CardAbility {
     return false;
   }
 
+  /**
+   * Some abilities (like Confusion) will take place before the attacking ability
+   */
+  public playsBeforeAttack(other: CardAbility | undefined): boolean {
+    return false;
+  }
+
   abstract perform(attacker: Deck, defender: Deck): MoveLog[];
 
   public static create(from: Ability): CardAbility {
@@ -190,11 +197,15 @@ class ConfusionAbility extends CardAbility {
     return true;
   }
 
+  playsBeforeAttack(other: CardAbility): boolean {
+    return true;
+  }
+
   perform(attacker: Deck, defender: Deck): MoveLog[] {
     let card = attacker.previousAliveCard();
     if (card) {
         const attackingCard = attacker.getActiveCard();
-        const logs: MoveLog[] = attackingCard.playCardAgainst(card); 
+        const logs: MoveLog[] = attackingCard.attackCard(card); 
         return logs.map(log => _.merge(log, {'ability': this.ability()}));
     }
     return [];

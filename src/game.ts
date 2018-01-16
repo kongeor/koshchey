@@ -85,8 +85,11 @@ export class Game {
         }
 
         let attackingAbility = attackingCard.attackingAbility;
+        let defendingAbility = defendingCard.defendingAbility;
 
-        if (attackingAbility) {
+        if (defendingAbility && defendingAbility.playsBeforeAttack(attackingAbility)) {
+            moveLogs = moveLogs.concat(defendingAbility.perform(attacker, defender));
+        } else if (attackingAbility) {
             moveLogs = moveLogs.concat(attackingAbility.perform(attacker, defender));
         } else {
             moveLogs = moveLogs.concat(attackingCard.playCardAgainst(defendingCard));

@@ -124,7 +124,7 @@ export class Deck {
         const cardStrs = _.map(this.cards, c => c.toString());
         const deckStr = cardStrs.join(" ");
         const playCardIdx = _.take(cardStrs, this.activeCardIdx).map(s => s.length).reduce((sum, n) => sum + n, 0);
-        const cardPointerStr = _.times(playCardIdx + this.activeCardIdx * 2, x => " ").join("");
+        const cardPointerStr = _.times(playCardIdx + this.activeCardIdx, x => " ").join("");
         return deckStr + "\n" + cardPointerStr + "⇑";
     }
 

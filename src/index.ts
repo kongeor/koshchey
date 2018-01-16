@@ -12,7 +12,7 @@ class Runner {
             game.playRound();
         }
         console.log(game.toString());
-        console.log(JSON.stringify(game.logs, null, 4));
+        // console.log(JSON.stringify(game.logs, null, 4));
         console.log();
         return 0;
     }
