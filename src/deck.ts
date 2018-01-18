@@ -23,6 +23,10 @@ export class Deck {
         this._game = game;
     } 
 
+    get game(): Game {
+        return this._game;
+    }
+
     static dummy(): Deck {
         return new Deck([]);
     }

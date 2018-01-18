@@ -75,7 +75,7 @@ export class GameCard {
         // TODO logs
         logs = logs.concat(other.defendingAbility.perform(this._deck, other._deck));
     } else {
-        const counter = Math.random() > 0.7;
+        const counter = other.deck.game.rnd.nextDouble() > 0.7;
 
         if (counter) {
           const counterLogs = other.attackCard(this);
