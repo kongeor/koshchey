@@ -11,7 +11,7 @@
     "start": "node -r ts-node/register src/runner.ts"
   },
   "keywords": [],
-  "author": "Kostas Georgidis",
+  "author": "Kostas Georgiadis",
   "license": "MIT",
   "devDependencies": {
     "@types/chai": "^4.1.4",
