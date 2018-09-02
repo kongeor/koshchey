@@ -1,5 +1,6 @@
 import { Deck } from './deck';
 import { TurnLog, MoveLog } from './iface';
+import { Random } from './random';
 
 export type Player = "p1" | "p2";
 
@@ -21,7 +22,9 @@ export class Game {
 
     private _logs: TurnLog[];
 
-    constructor(p1: Deck, p2: Deck) {
+    private _rnd: Random;
+
+    constructor(p1: Deck, p2: Deck, rnd: Random) {
         this.p1 = p1;
         this.p2 = p2;
 
@@ -34,14 +37,16 @@ export class Game {
         this.turn = "p1";
 
         this._logs = [];
-    }
 
-    static dummy(): Game {
-        return new Game(Deck.dummy(), Deck.dummy());
+        this._rnd = rnd;
     }
 
     get logs(): TurnLog[] {
         return this._logs;
+    }
+
+    get rnd(): Random {
+        return this._rnd;
     }
 
     public isFinished(): boolean {
