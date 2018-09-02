@@ -1,6 +1,6 @@
 {
   "name": "kashei",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "types": "dist/index.d.ts",
@@ -8,11 +8,11 @@
     "prepublish": "npm run build",
     "build": "tsc",
     "test": "mocha -r ts-node/register test/**/*spec.ts",
-    "start": "node -r ts-node/register src/index.ts"
+    "start": "node -r ts-node/register src/runner.ts"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Kostas Georgidis",
+  "license": "MIT",
   "devDependencies": {
     "@types/chai": "^4.1.4",
     "@types/mocha": "^5.2.5",
