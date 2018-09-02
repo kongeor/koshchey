@@ -21,3 +21,7 @@ npm start
 ```
 
 to see it in action.
+
+## License
+
+MIT
