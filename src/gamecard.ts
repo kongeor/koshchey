@@ -14,7 +14,7 @@ export class GameCard {
   private _luck: number;
   private _abilities: CardAbility[];
 
-  private _deck: Deck;
+  // private _deck: Deck;
 
   constructor(card: Card) {
     this._attack = this._initialAttack = card.attack;
@@ -23,13 +23,13 @@ export class GameCard {
     this._abilities = _.map(card.abilities, CardAbility.createFromNum);
   }
 
-  set deck(deck: Deck) {
-    this._deck = deck;
-  }
+  // set deck(deck: Deck) {
+  //   this._deck = deck;
+  // }
 
-  get deck(): Deck {
-    return this._deck;
-  }
+  // get deck(): Deck {
+  //   return this._deck;
+  // }
 
   get life(): number {
     return this._life;
@@ -67,13 +67,13 @@ export class GameCard {
     return logs;
   }
 
-  playCardAgainst(other: GameCard): MoveLog[] {
+  playCardAgainst(other: GameCard, attacker: Deck, defender: Deck): MoveLog[] {
     let logs: MoveLog[] = this.attackCard(other);
 
     const defendingAbility = other.defendingAbility;
     if (other.defendingAbility) {
         // TODO logs
-        logs = logs.concat(other.defendingAbility.perform(this._deck, other._deck));
+        logs = logs.concat(other.defendingAbility.perform(attacker, defender));
     } else {
         const counter = Math.random() > 0.7;
 

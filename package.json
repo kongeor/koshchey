@@ -14,17 +14,17 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/chai": "^4.0.10",
-    "@types/mocha": "^2.2.46",
-    "@types/seedrandom": "^2.4.19-alpha",
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "@types/seedrandom": "^2.4.27",
     "chai": "^4.1.2",
-    "mocha": "^4.1.0",
-    "ts-node": "^4.1.0",
-    "typescript": "^2.6.2"
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.0",
+    "typescript": "^3.0.1"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.92",
-    "lodash": "^4.17.4",
+    "@types/lodash": "^4.14.116",
+    "lodash": "^4.17.10",
     "seedrandom": "^2.4.3"
   }
 }

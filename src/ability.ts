@@ -256,7 +256,7 @@ class BloodlustAbility extends CardAbility {
     let logs: MoveLog[] = [];
     do  {
         const card = defender.getActiveCard();
-        logs = logs.concat(attacker.getActiveCard().playCardAgainst(card));
+        logs = logs.concat(attacker.getActiveCard().playCardAgainst(card, attacker, defender));
         killed = card.isDead();
     } while(attacker.getActiveCard().isAlive() && killed && defender.advanceIndexes('attacker'));
     return logs.map(log => _.merge(log, {'ability': this.ability()}));

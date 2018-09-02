@@ -9,19 +9,19 @@ export class Deck {
     private cards: GameCard[];
     private activeCardIdx: number;
 
-    private _game: Game;
+    // private _game: Game;
 
     constructor(cards: GameCard[]) {
         this.cards = cards;
-        this.cards.forEach(c => {
-            c.deck = this;
-        })
+        // this.cards.forEach(c => {
+        //     c.deck = this;
+        // })
         this.activeCardIdx = 0;
     }
 
-    set game(game: Game) {
-        this._game = game;
-    } 
+    // set game(game: Game) {
+    //     this._game = game;
+    // } 
 
     static dummy(): Deck {
         return new Deck([]);
