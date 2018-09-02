@@ -73,12 +73,12 @@ export class Game {
 
     private playTurn(): TurnLog {
         switch (this.turn) {
-            case 'p1': return this.playDeckAgainst(this.p1, this.p2);
-            case 'p2': return this.playDeckAgainst(this.p2, this.p1);
+            case 'p1': return this.playDeckAgainst(this, this.p1, this.p2);
+            case 'p2': return this.playDeckAgainst(this, this.p2, this.p1);
         }
     }
 
-    private playDeckAgainst(attacker: Deck, defender: Deck): TurnLog {
+    private playDeckAgainst(game: Game, attacker: Deck, defender: Deck): TurnLog {
         let attackingCard = attacker.getActiveCard();
         let defendingCard = defender.getActiveCard();
 
@@ -86,18 +86,18 @@ export class Game {
 
         let passiveAbility = attackingCard.preRoundAbility;
         if (passiveAbility) {
-            moveLogs = passiveAbility.perform(attacker, defender);
+            moveLogs = passiveAbility.perform(game, attacker, defender);
         }
 
         let attackingAbility = attackingCard.attackingAbility;
         let defendingAbility = defendingCard.defendingAbility;
 
         if (defendingAbility && defendingAbility.playsBeforeAttack(attackingAbility)) {
-            moveLogs = moveLogs.concat(defendingAbility.perform(attacker, defender));
+            moveLogs = moveLogs.concat(defendingAbility.perform(game, attacker, defender));
         } else if (attackingAbility) {
-            moveLogs = moveLogs.concat(attackingAbility.perform(attacker, defender));
+            moveLogs = moveLogs.concat(attackingAbility.perform(game, attacker, defender));
         } else {
-            moveLogs = moveLogs.concat(attackingCard.playCardAgainst(defendingCard, attacker, defender));
+            moveLogs = moveLogs.concat(attackingCard.playCardAgainst(game, defendingCard, attacker, defender));
         }
 
         this.updateState();
@@ -106,7 +106,7 @@ export class Game {
         if (!this.isFinished()) {
             const postRoundAbility = attackingCard.postRoundAbilitiy;
             if (postRoundAbility) {
-                moveLogs = moveLogs.concat(postRoundAbility.perform(attacker, defender));
+                moveLogs = moveLogs.concat(postRoundAbility.perform(game, attacker, defender));
             }
         }
 

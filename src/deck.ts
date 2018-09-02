@@ -23,9 +23,9 @@ export class Deck {
     //     this._game = game;
     // } 
 
-    get game(): Game {
-        return this._game;
-    }
+    // get game(): Game {
+    //     return this._game;
+    // }
 
     static dummy(): Deck {
         return new Deck([]);
@@ -112,17 +112,17 @@ export class Deck {
     }
 
     // TODO not used atm
-    public performPostRoundAbilities(): MoveLog[] {
-        let logs: MoveLog[] = [];
-        this.cards.forEach(card => {
-            if (card.postRoundAbilitiy) {
-                // TODO should provide a method
-                // to override the active card
-                logs = logs.concat(card.postRoundAbilitiy.perform(this, Deck.dummy()));
-            }
-        })
-        return logs;
-    }
+    // public performPostRoundAbilities(): MoveLog[] {
+    //     let logs: MoveLog[] = [];
+    //     this.cards.forEach(card => {
+    //         if (card.postRoundAbilitiy) {
+    //             // TODO should provide a method
+    //             // to override the active card
+    //             logs = logs.concat(card.postRoundAbilitiy.perform(this, Deck.dummy()));
+    //         }
+    //     })
+    //     return logs;
+    // }
 
     toString(): string {
         const cardStrs = _.map(this.cards, c => c.toString());

@@ -1,9 +1,9 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/kashengine
+    working_directory: ~/kashei
     docker:
-      - image: circleci/node:8.9.3
+      - image: circleci/node:10.9.0
     steps:
       - checkout
       - restore_cache:

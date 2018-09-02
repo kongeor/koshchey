@@ -67,15 +67,15 @@ export class GameCard {
     return logs;
   }
 
-  playCardAgainst(other: GameCard, attacker: Deck, defender: Deck): MoveLog[] {
+  playCardAgainst(game: Game, other: GameCard, attacker: Deck, defender: Deck): MoveLog[] {
     let logs: MoveLog[] = this.attackCard(other);
 
     const defendingAbility = other.defendingAbility;
     if (other.defendingAbility) {
         // TODO logs
-        logs = logs.concat(other.defendingAbility.perform(attacker, defender));
+        logs = logs.concat(other.defendingAbility.perform(game, attacker, defender));
     } else {
-        const counter = other.deck.game.rnd.nextDouble() > 0.7;
+        const counter = game.rnd.nextDouble() > 0.7;
 
         if (counter) {
           const counterLogs = other.attackCard(this);

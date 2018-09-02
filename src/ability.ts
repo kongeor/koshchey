@@ -70,7 +70,7 @@ export abstract class CardAbility {
     return false;
   }
 
-  abstract perform(attacker: Deck, defender: Deck): MoveLog[];
+  abstract perform(game: Game, attacker: Deck, defender: Deck): MoveLog[];
 
   public static create(from: Ability): CardAbility {
     switch (from) {
@@ -115,7 +115,7 @@ class UndeadAbility extends CardAbility {
     return true;
   }
 
-  perform(attacker: Deck, defender: Deck): MoveLog[] {
+  perform(game: Game, attacker: Deck, defender: Deck): MoveLog[] {
     const source = attacker.getActiveCard();
     const resurrected = source.resurrect();
     return [{'source': source.asData(), 'ability': this.ability(), 
@@ -142,7 +142,7 @@ export class HealingAbility extends CardAbility {
     return true;
   }
 
-  perform(attacker: Deck, defender: Deck): MoveLog[] {
+  perform(game: Game, attacker: Deck, defender: Deck): MoveLog[] {
     const next = attacker.nextCard();
     const log: MoveLog[] = [];
     if (next.isAlive()) {
@@ -175,7 +175,7 @@ class RotationAbility extends CardAbility {
     return true;
   }
 
-  perform(attacker: Deck, defender: Deck): MoveLog[] {
+  perform(game: Game, attacker: Deck, defender: Deck): MoveLog[] {
     defender.rotate(1);
     return [{'source': attacker.getActiveCard().asData(), 'rotation': 1,
       'ability': this.ability()}]
@@ -201,7 +201,7 @@ class ConfusionAbility extends CardAbility {
     return true;
   }
 
-  perform(attacker: Deck, defender: Deck): MoveLog[] {
+  perform(game: Game, attacker: Deck, defender: Deck): MoveLog[] {
     let card = attacker.previousAliveCard();
     if (card) {
         const attackingCard = attacker.getActiveCard();
@@ -226,7 +226,7 @@ class DeathtouchAbility extends CardAbility {
     return true;
   }
 
-  perform(attacker: Deck, defender: Deck): MoveLog[] {
+  perform(game: Game, attacker: Deck, defender: Deck): MoveLog[] {
     // TODO create a defending ability
     // TODO create a class method
     const defendingCard = defender.getActiveCard();
@@ -251,12 +251,12 @@ class BloodlustAbility extends CardAbility {
     return true;
   }
 
-  perform(attacker: Deck, defender: Deck): MoveLog[] {
+  perform(game: Game, attacker: Deck, defender: Deck): MoveLog[] {
     let killed;
     let logs: MoveLog[] = [];
     do  {
         const card = defender.getActiveCard();
-        logs = logs.concat(attacker.getActiveCard().playCardAgainst(card, attacker, defender));
+        logs = logs.concat(attacker.getActiveCard().playCardAgainst(game, card, attacker, defender));
         killed = card.isDead();
     } while(attacker.getActiveCard().isAlive() && killed && defender.advanceIndexes('attacker'));
     return logs.map(log => _.merge(log, {'ability': this.ability()}));

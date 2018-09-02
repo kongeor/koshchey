@@ -3,6 +3,8 @@ import { Gen } from '../src/gen';
 import { expect } from 'chai';
 import 'mocha';
 import { HealingAbility } from '../src/ability';
+import { Game } from '../src/game';
+import { Random } from '../src/random';
 
 describe('Abilities', () => {
 
@@ -15,7 +17,8 @@ describe('Abilities', () => {
             const ab = new HealingAbility();
             expect(d1.cardAt(1).life).to.be.eq(2);
             expect(d1.cardAt(4).life).to.be.eq(2);
-            ab.perform(d1, d2);
+            const game = new Game(d1, d2, new Random("seed"));
+            ab.perform(game, d1, d2);
             expect(d1.cardAt(1).life).to.be.eq(3);
             expect(d1.cardAt(4).life).to.be.eq(3);
         });
