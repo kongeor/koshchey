@@ -6,74 +6,65 @@ import { DeckData, MoveLog } from './iface';
 
 export class Deck {
 
-    private cards: GameCard[];
-    private activeCardIdx: number;
-
-    // private _game: Game;
+    private _cards: GameCard[];
+    private _activeCardIdx: number;
 
     constructor(cards: GameCard[]) {
-        this.cards = cards;
-        // this.cards.forEach(c => {
-        //     c.deck = this;
-        // })
-        this.activeCardIdx = 0;
+        this._cards = cards;
+        this._activeCardIdx = 0;
     }
 
-    // set game(game: Game) {
-    //     this._game = game;
-    // } 
-
-    // get game(): Game {
-    //     return this._game;
-    // }
+    get cards(): GameCard[] {
+        return this._cards;
+    }
 
     static dummy(): Deck {
         return new Deck([]);
     }
 
     public areAllDead(): boolean {
-        return _.every(this.cards, c => c.isDead());
+        return _.every(this._cards, c => c.isDead());
     }
 
     public getActiveCard(): GameCard {
-        return this.cardAt(this.activeCardIdx);
+        return this.cardAt(this._activeCardIdx);
     }
 
     public getActiveCardIdx(): number {
-        return this.activeCardIdx;
+        return this._activeCardIdx;
     }
 
     public cardAt(idx: number): GameCard {
-        return this.cards[idx];
+        return this._cards[idx];
     }
 
     public nextCard(): GameCard {
-        return this.cards[this.nextIndex(this.activeCardIdx)];
+        return this._cards[this.nextIndex(this._activeCardIdx)];
     }
 
     public previousCard(): GameCard {
-        return this.cards[this.previousIndex(this.activeCardIdx)];
+        return this._cards[this.previousIndex(this._activeCardIdx)];
     }
 
     public previousAliveCard(): GameCard | undefined {
 
-        let currentIdx = this.previousIndex(this.activeCardIdx);
+        let currentIdx = this.previousIndex(this._activeCardIdx);
 
-        while (currentIdx !== this.activeCardIdx && !this.cardAt(currentIdx).isAlive()) {
+        while (currentIdx !== this._activeCardIdx && !this.cardAt(currentIdx).isAlive()) {
             currentIdx = this.previousIndex(currentIdx);
         }
 
-        if (currentIdx !== this.activeCardIdx) {
+        if (currentIdx !== this._activeCardIdx) {
             return this.cardAt(currentIdx);
         }
     }
 
     public advanceIndexes(turn: Turn): boolean {
         let cardCount = CARDS;
-        let currentIdx = this.activeCardIdx;
+        let currentIdx = this._activeCardIdx;
 
         if (turn === 'attacker') {
-            currentIdx = this.nextIndex(this.activeCardIdx);
+            currentIdx = this.nextIndex(this._activeCardIdx);
         }
 
         // TODO improve
@@ -85,10 +76,10 @@ export class Deck {
                 found = true;
                 break;
             }
-            currentIdx = this.nextIndex(this.activeCardIdx);
+            currentIdx = this.nextIndex(this._activeCardIdx);
         }
 
-        this.activeCardIdx = currentIdx;
+        this._activeCardIdx = currentIdx;
         return found;
     }
 
@@ -108,7 +99,7 @@ export class Deck {
         if (n < 0) {
             steps = CARDS - n;
         }
-        this.cards = _.take(_.drop(_.concat(this.cards, this.cards), steps), CARDS);
+        this._cards = _.take(_.drop(_.concat(this._cards, this._cards), steps), CARDS);
     }
 
     // TODO not used atm
@@ -125,10 +116,10 @@ export class Deck {
     // }
 
     toString(): string {
-        const cardStrs = _.map(this.cards, c => c.toString());
+        const cardStrs = _.map(this._cards, c => c.toString());
         const deckStr = cardStrs.join(" ");
-        const playCardIdx = _.take(cardStrs, this.activeCardIdx).map(s => s.length).reduce((sum, n) => sum + n, 0);
-        const cardPointerStr = _.times(playCardIdx + this.activeCardIdx, x => " ").join("");
+        const playCardIdx = _.take(cardStrs, this._activeCardIdx).map(s => s.length).reduce((sum, n) => sum + n, 0);
+        const cardPointerStr = _.times(playCardIdx + this._activeCardIdx, x => " ").join("");
         return deckStr + "\n" + cardPointerStr + "⇑";
     }
 
@@ -136,6 +127,6 @@ export class Deck {
         return { 'cards': []
         // TODO
         // _.map(this.cards, c => c.asData())
-        , 'activeCardIdx': this.activeCardIdx };
+        , 'activeCardIdx': this._activeCardIdx };
     }
 }

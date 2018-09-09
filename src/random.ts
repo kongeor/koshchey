@@ -29,35 +29,3 @@ export class Random {
         this._seed = val;
     } 
 }
-
-const rnd = new Random("5");
-
-console.log(rnd.nextIntRange(5, 8));
-console.log(rnd.nextIntRange(5, 8));
-console.log(rnd.nextIntRange(5, 8));
-
-console.log(rnd.nextInt(3));
-console.log(rnd.nextInt(3));
-console.log(rnd.nextInt(3));
-
-console.log(rnd.nextIntRange(5, 8));
-console.log(rnd.nextIntRange(5, 8));
-console.log(rnd.nextIntRange(5, 8));
-
-
-// console.log(rnd.nextDouble());
-// console.log(rnd.nextDouble());
-// console.log(rnd.nextDouble());
-// console.log(rnd.nextDouble());
-// console.log(rnd.nextDouble());
-// console.log(rnd.nextDouble());
-// console.log(rnd.nextDouble());
-
-// const vals = _.times(10000, x => rnd.nextDouble());
-
-// const freqs = _
-//     .chain(vals)
-//     .map(x => x * 10)
-//     .groupBy(Math.floor).value();
-
-// console.log(freqs);

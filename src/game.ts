@@ -11,8 +11,8 @@ export type Turn = 'attacker' | 'defender';
 export const CARDS = 5;
 
 export class Game {
-    private p1: Deck;
-    private p2: Deck;
+    private _p1: Deck;
+    private _p2: Deck;
 
     private round: number;
 
@@ -25,11 +25,8 @@ export class Game {
     private _rnd: Random;
 
     constructor(p1: Deck, p2: Deck, rnd: Random) {
-        this.p1 = p1;
-        this.p2 = p2;
-
-        // this.p1.game = this;
-        // this.p2.game = this;
+        this._p1 = p1;
+        this._p2 = p2;
 
         this.round = 0;
         this.state = "active";
@@ -39,6 +36,14 @@ export class Game {
         this._logs = [];
 
         this._rnd = rnd;
+    }
+
+    get p1(): Deck {
+        return this._p1;
+    }
+
+    get p2(): Deck {
+        return this._p2;
     }
 
     get logs(): TurnLog[] {

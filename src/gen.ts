@@ -75,7 +75,3 @@ export class Gen {
         return new Deck(_.times(5, () => Gen.randomSimpleCard(rnd)));
     }
 }
-
-const rnd = new Random("yo");
-const deck = Gen.randomDeck(rnd);
-console.log(deck);
